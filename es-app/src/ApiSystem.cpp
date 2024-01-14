@@ -1700,6 +1700,8 @@ bool ApiSystem::isScriptingSupported(ScriptId script)
 	case ApiSystem::BACKGLASS:
 		executables.push_back("batocera-backglass");
 		break;
+	case ApiSystem::EFI:
+		return (Utils::FileSystem::exists("/usr/bin/batocera-efi") && executeScript("/usr/bin/batocera-efi check"));
 	}
 
 	if (executables.size() == 0)
@@ -2272,6 +2274,30 @@ std::vector<Service> ApiSystem::getServices()
 	return services;
 }
 
+std::vector<EFIBoot> ApiSystem::getEFIBoot()
+{
+	std::vector<EFIBoot> boots;
+
+	LOG(LogDebug) << "ApiSystem::getEFIBoot";
+
+	auto lines = executeEnumerationScript("batocera-efi listBoot");
+
+	for (auto line : lines)
+	{
+		auto splits = Utils::String::split(line, '\t', true);
+		if (splits.size() == 4)
+		{
+			EFIBoot b;
+			b.slot = splits[0];
+			b.enabled = (splits[1] == "*");
+			b.label = splits[2];
+			b.path = splits[3];
+			boots.push_back(b);
+		}
+	}
+	return boots;
+}
+
 std::vector<std::string> ApiSystem::backglassThemes() {
   std::vector<std::string> themes;
 
@@ -2303,5 +2329,14 @@ bool ApiSystem::enableService(std::string name, bool enable)
 	if (res)
 		res = executeScript("batocera-services " + std::string(enable ? "start" : "stop") + " " + serviceName);
 	
+	return res;
+}
+
+bool ApiSystem::enableEFIBoot(std::string slot, bool enable)
+{
+	LOG(LogDebug) << "ApiSystem::enableEFIBoot " << slot << (enable ? " enable" : " disable");
+
+	bool res = executeScript("batocera-efi " + std::string(enable ? "activateBoot" : "inactivateBoot") + " " + slot);
+
 	return res;
 }

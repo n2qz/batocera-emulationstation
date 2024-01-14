@@ -88,6 +88,14 @@ struct Service
   bool enabled;
 };
 
+struct EFIBoot
+{
+  std::string slot;
+  bool enabled;
+  std::string label;
+  std::string path;
+};
+
 class ApiSystem : public IPdfHandler, public IExternalActivity
 {
 public:
@@ -125,6 +133,7 @@ public:
 		READPLANEMODE = 29,
 		WRITEPLANEMODE = 30,
 		BACKGLASS = 31,
+		EFI = 32,
 	};
 
 	virtual bool isScriptingSupported(ScriptId script);
@@ -291,6 +300,9 @@ public:
 
 	virtual std::vector<Service> getServices();
 	virtual bool enableService(std::string name, bool enable);
+
+	virtual std::vector<EFIBoot> getEFIBoot();
+	virtual bool enableEFIBoot(std::string slot, bool enable);
 
 	virtual std::vector<std::string> backglassThemes();
 	virtual void restartBackglass();

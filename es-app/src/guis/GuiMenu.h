@@ -58,6 +58,7 @@ private:
         void openQuitMenu();
         void openSystemInformations();
         void openServicesSettings();
+        void openUEFISettings();
         void openMultiScreensSettings();
         void openDmdSettings();
         void openDeveloperSettings();

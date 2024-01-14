@@ -713,6 +713,27 @@ void GuiMenu::openMultiScreensSettings()
 	window->pushGui(s);
 }
 
+void GuiMenu::openUEFISettings()
+{
+	auto s = new GuiSettings(mWindow, _("UEFI CONTROLS").c_str());
+
+	auto boots = ApiSystem::getInstance()->getEFIBoot();
+	for(unsigned int i = 0; i < boots.size(); i++) {
+	  auto boot_enabled = std::make_shared<SwitchComponent>(mWindow);
+	  boot_enabled->setState(boots[i].enabled);
+	  s->addWithLabel(boots[i].label, boot_enabled);
+	  s->addSaveFunc([boots, i, boot_enabled]
+	  {
+	    if (boots[i].enabled != boot_enabled->getState())
+	      {
+		ApiSystem::getInstance()->enableEFIBoot(boots[i].slot, boot_enabled->getState());
+	      }
+	  });
+	}
+
+	mWindow->pushGui(s);
+}
+
 void GuiMenu::openDeveloperSettings()
 {
 	Window *window = mWindow;
@@ -1997,6 +2018,12 @@ void GuiMenu::openSystemSettings()
 		});
 		mWindow->pushGui(securityGui);
 	});
+
+	// UEFI
+	if (isFullUI && ApiSystem::getInstance()->isScriptingSupported(ApiSystem::EFI)) {
+		s->addEntry(_("UEFI CONTROLS"), true, [this] { openUEFISettings(); });
+	}
+
 #else
 	if (isFullUI)
 	{
