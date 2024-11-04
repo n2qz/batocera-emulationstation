@@ -141,22 +141,40 @@ SystemData::SystemData(const SystemMetadata& meta, SystemEnvironmentData* envDat
 SystemData::~SystemData()
 {
 	if (mBindableRandom)
+        {
+		LOG(LogDebug) << "~SystemData() - delete mBindableRandom";
 		delete mBindableRandom;
+        }
 
 	if (mRootFolder)
+        {
+		LOG(LogDebug) << "~SystemData() - delete mRootFolder";
 		delete mRootFolder;
+        }
 
 	if (!mIsCollectionSystem && mEnvData != nullptr)
+        {
+		LOG(LogDebug) << "~SystemData() - delete mEnvData";
 		delete mEnvData;
+        }
 
 	if (mSaveRepository != nullptr)
+        {
+		LOG(LogDebug) << "~SystemData() - delete mSaveRepository";
 		delete mSaveRepository;
+        }
 
 	if (mGameCountInfo != nullptr)
+        {
+		LOG(LogDebug) << "~SystemData() - delete mGameCountInfo";
 		delete mGameCountInfo;
+        }
 
 	if (mFilterIndex != nullptr)
+        {
+		LOG(LogDebug) << "~SystemData() - delete mFilterIndex";
 		delete mFilterIndex;
+        }
 }
 
 void SystemData::removeMultiDiskContent(std::unordered_map<std::string, FileData*>& fileMap)

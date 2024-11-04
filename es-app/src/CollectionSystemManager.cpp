@@ -138,8 +138,10 @@ CollectionSystemManager::CollectionSystemManager(Window* window) : mWindow(windo
 
 CollectionSystemManager::~CollectionSystemManager()
 {
+	LOG(LogDebug) << "Deinit CollectionSystemManager - removeCollectionsFromDisplayedSystems()";
 	removeCollectionsFromDisplayedSystems();
 
+	LOG(LogDebug) << "Deinit CollectionSystemManager - mCustomCollectionSystemsData";
 	// iterate the map
 	for(auto it = mCustomCollectionSystemsData.cbegin() ; it != mCustomCollectionSystemsData.cend() ; it++ )
 	{
@@ -151,21 +153,27 @@ CollectionSystemManager::~CollectionSystemManager()
 		delete it->second.system;
 	}
 
+	LOG(LogDebug) << "Deinit CollectionSystemManager - mAutoCollectionSystemsData";
 	for (auto it = mAutoCollectionSystemsData.cbegin(); it != mAutoCollectionSystemsData.cend(); it++)
+        {
+		LOG(LogDebug) << "Deinit CollectionSystemManager - mAutoCollectionSystemsData - " + it->second.system->getName();
 		delete it->second.system;
-
+        }
 	if (mCustomCollectionsBundle != nullptr)
 	{
+		LOG(LogDebug) << "Deinit CollectionSystemManager - mCustomCollectionsBundle";
 		delete mCustomCollectionsBundle;
 		mCustomCollectionsBundle = nullptr;
 	}
 
 	if (mCollectionEnvData != nullptr)
 	{
+		LOG(LogDebug) << "Deinit CollectionSystemManager - mCollectionEnvData";
 		delete mCollectionEnvData;
 		mCollectionEnvData = nullptr;
 	}
 
+	LOG(LogDebug) << "Deinit CollectionSystemManager 6";
 	sInstance = NULL;
 }
 

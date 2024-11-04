@@ -734,26 +734,43 @@ int main(int argc, char* argv[])
 		Log::flush();
 	}
 
+	LOG(LogDebug) << "EmulationStation main running loop stopped.";
 	if (Utils::Platform::isFastShutdown())
+        {
+		LOG(LogDebug) << "Setting IgnoreGamelist for fast shutdown.";
 		Settings::getInstance()->setBool("IgnoreGamelist", true);
-
+        }
+	LOG(LogDebug) << "Stopping WatchersManager.";
 	WatchersManager::stop();
+	LOG(LogDebug) << "Stopping ThreadedHasher.";
 	ThreadedHasher::stop();
+	LOG(LogDebug) << "Stopping ThreadedScraper.";
 	ThreadedScraper::stop();
 
+	LOG(LogDebug) << "Deinitializing ApiSystem.";
 	ApiSystem::getInstance()->deinit();
 
 	while (window.peekGui() != ViewController::get())
+        {
+		LOG(LogDebug) << "Deleting window.";
 		delete window.peekGui();
-
+        }
 	if (SystemData::hasDirtySystems())
+        {
+		LOG(LogDebug) << "Rendering splash screen SAVING METADATAS.";
 		window.renderSplashScreen(_("SAVING METADATAS. PLEASE WAIT..."));
-
+        }
+	LOG(LogDebug) << "Saving image cache.";
 	ImageIO::saveImageCache();
+	LOG(LogDebug) << "Deinitializing MameNames.";
 	MameNames::deinit();
+	LOG(LogDebug) << "Saving viewController state.";
 	ViewController::saveState();
+	LOG(LogDebug) << "Deinit CollectionSystemManager.";
 	CollectionSystemManager::deinit();
+	LOG(LogDebug) << "Deleting Systems.";
 	SystemData::deleteSystems();
+	LOG(LogDebug) << "Exiting .";
 	Scripting::exitScriptingEngine();
 
 	// call this ONLY when linking with FreeImage as a static library
