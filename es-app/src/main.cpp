@@ -740,6 +740,7 @@ int main(int argc, char* argv[])
 		Renderer::swapBuffers();
 
 		Log::flush();
+                handleDeferredSignal();
 	}
 
 	LOG(LogDebug) << "main() loop ended, cleaning up for exit";
