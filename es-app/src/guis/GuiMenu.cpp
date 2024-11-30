@@ -691,6 +691,7 @@ void GuiMenu::openMultiScreensSettings()
 	{
 	  if (s->getVariable("exitreboot") && Settings::getInstance()->getBool("ExitOnRebootRequired"))
 	    {
+	      LOG(LogDebug) << "GuiMenu::openMultiScreensSettings() calling quitES()";
 	      Utils::Platform::quitES(Utils::Platform::QuitMode::QUIT);
 	      return;
 	    }
@@ -1254,7 +1255,10 @@ void GuiMenu::openUpdatesSettings()
 		updateGui->addEntry(GuiUpdate::state == GuiUpdateState::State::UPDATE_READY ? _("APPLY UPDATE") : _("START UPDATE"), true, [this]
 		{
 			if (GuiUpdate::state == GuiUpdateState::State::UPDATE_READY)
+			{
+				LOG(LogDebug) << "GuiMenu::openUpdatesSettings() calling quitES()";
 				Utils::Platform::quitES(Utils::Platform::QuitMode::RESTART);
+			}
 			else if (GuiUpdate::state == GuiUpdateState::State::UPDATER_RUNNING)
 				mWindow->pushGui(new GuiMsgBox(mWindow, _("UPDATER IS ALREADY RUNNING")));
 			else
@@ -1976,6 +1980,7 @@ void GuiMenu::openSystemSettings()
 	{
 		if (s->getVariable("exitreboot") && Settings::getInstance()->getBool("ExitOnRebootRequired"))
 		{
+			LOG(LogDebug) << "GuiMenu::openSystemSettings() onFinalize calling quitES()";
 			Utils::Platform::quitES(Utils::Platform::QuitMode::QUIT);
 			return;
 		}

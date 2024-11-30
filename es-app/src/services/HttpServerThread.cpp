@@ -134,6 +134,7 @@ static bool isAllowed(const httplib::Request& req, httplib::Response& res)
 		return false;
 	}
 
+	LOG(LogDebug) << "HttpServerThread : Access allowed for " + req.remote_addr;
 	return true;
 }
 
@@ -233,7 +234,11 @@ void HttpServerThread::run()
 			return;
 		}
 
-		LOG(LogDebug) << "mHttpServer calling Utils::Platform::quitES()";
+		LOG(LogDebug) << "mHttpServer calling Utils::Platform::quitES() after request with parameters:\n";
+		for (const auto& param : req.params) {
+                  LOG(LogDebug) << param.first << ": " << param.second << "\n";
+		}
+
 		Utils::Platform::quitES();
 	});
 

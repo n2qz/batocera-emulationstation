@@ -215,9 +215,11 @@ namespace Utils
 				Scripting::fireEvent("quit", "shutdown");
 				Scripting::fireEvent("shutdown");
 				break;
+                        case QuitMode::QUIT:
+				LOG(LogDebug) << "quitES(mode=QUIT)";
+				break;
                         default:
-				LOG(LogDebug) << "quitES(mode=UNKNOWN), not quitting";
-				return 0;
+				LOG(LogDebug) << "quitES(mode=UNKNOWN)";
 				break;
 			}
 
