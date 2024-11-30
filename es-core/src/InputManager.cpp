@@ -590,6 +590,7 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 #if !WIN32
 		if (ev.key.keysym.sym == SDLK_F4)
 		{
+			LOG(LogDebug) << "InputManager::parseEvent() received SDLK_F4, generating SDL_QUIT event";
 			SDL_Event* quit = new SDL_Event();
 			quit->type = SDL_QUIT;
 			SDL_PushEvent(quit);

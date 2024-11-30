@@ -204,14 +204,19 @@ namespace Utils
 			{
 			case QuitMode::REBOOT:
 			case QuitMode::FAST_REBOOT:
+				LOG(LogDebug) << "quitES(mode=" << (QuitMode::FAST_REBOOT ? "FAST_" : "") << "REBOOT)";
 				Scripting::fireEvent("quit", "reboot");
 				Scripting::fireEvent("reboot");
 				break;
 
 			case QuitMode::SHUTDOWN:
 			case QuitMode::FAST_SHUTDOWN:
+				LOG(LogDebug) << "quitES(mode=" << (QuitMode::FAST_SHUTDOWN ? "FAST_" : "") << "SHUTDOWN)";
 				Scripting::fireEvent("quit", "shutdown");
 				Scripting::fireEvent("shutdown");
+				break;
+                        default:
+				LOG(LogDebug) << "quitES(mode=UNKNOWN)";
 				break;
 			}
 

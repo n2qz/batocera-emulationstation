@@ -233,6 +233,7 @@ void HttpServerThread::run()
 			return;
 		}
 
+		LOG(LogDebug) << "mHttpServer calling Utils::Platform::quitES()";
 		Utils::Platform::quitES();
 	});
 

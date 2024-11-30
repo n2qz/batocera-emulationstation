@@ -41,6 +41,7 @@
 #include "Scripting.h"
 #include "watchers/WatchersManager.h"
 #include "HttpReq.h"
+#include <atomic>
 
 #ifdef WIN32
 #include <Windows.h>
@@ -334,19 +335,23 @@ int setLocale(char * argv1)
 }
 
 
-void signalHandler(int signum) 
-{
-	if (signum == SIGSEGV)
-		LOG(LogError) << "Interrupt signal SIGSEGV received.\n";
-	else if (signum == SIGFPE)
-		LOG(LogError) << "Interrupt signal SIGFPE received.\n";
-	else if (signum == SIGFPE)
-		LOG(LogError) << "Interrupt signal SIGFPE received.\n";
-	else
-		LOG(LogError) << "Interrupt signal (" << signum << ") received.\n";
+std::atomic<int> last_signal(0);
 
-	// cleanup and close up stuff here  
-	exit(signum);
+void signalHandler(int signum) {
+    last_signal.store(signum, std::memory_order_relaxed);
+}
+
+void handleDeferredSignal()
+{
+	int signum = last_signal.load(std::memory_order_relaxed);
+
+	if (signum != 0) {
+		LOG(LogError) << "Received signal: " << strsignal(signum) << " (" << signum << ")\n";
+		last_signal.store(0, std::memory_order_relaxed);
+
+		// cleanup and close up stuff here
+		exit(signum);
+	}
 }
 
 void playVideo()
@@ -674,7 +679,10 @@ int main(int argc, char* argv[])
 				TRYCATCH("InputManager::parseEvent", InputManager::getInstance()->parseEvent(event, &window));
 
 				if (event.type == SDL_QUIT)
+				{
+					LOG(LogDebug) << "main() loop received SDL_QUIT event";
 					running = false;
+				}
 			} 
 			while(SDL_PollEvent(&event));
 
@@ -734,6 +742,7 @@ int main(int argc, char* argv[])
 		Log::flush();
 	}
 
+	LOG(LogDebug) << "main() loop ended, cleaning up for exit";
 	if (Utils::Platform::isFastShutdown())
 		Settings::getInstance()->setBool("IgnoreGamelist", true);
 
