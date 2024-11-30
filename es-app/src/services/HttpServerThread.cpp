@@ -789,7 +789,7 @@ void HttpServerThread::run()
 		if (Settings::getInstance()->getBool("PublicWebAccess"))
 			ip = "0.0.0.0";
 
-		mHttpServer->listen(ip.c_str(), 1234);
+		mHttpServer->listen(ip.c_str(), 2468);
 	}
 	catch (...)
 	{
