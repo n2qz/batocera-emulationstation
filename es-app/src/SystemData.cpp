@@ -337,6 +337,8 @@ void SystemData::populateFolder(FolderData* folder, std::unordered_map<std::stri
 					folder->addChild(newFolder);
 					fileMap[key] = newFolder;
 				}
+                                else
+					delete newFolder;
 			}
 		}
 	}
