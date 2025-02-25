@@ -85,6 +85,7 @@ std::string getDeviceParentSyspath(const std::string& path) {
 		const char *bt_parent_sysname = udev_device_get_syspath(bt_parent);
 		res = bt_parent_sysname;
 		udev_device_unref(ud);
+		udev_enumerate_unref(enumerate);
 		udev_unref(udev);
 		return res;
 	      }
@@ -95,6 +96,7 @@ std::string getDeviceParentSyspath(const std::string& path) {
 		const char *usb_parent_sysname = udev_device_get_syspath(usb_parent);
 		res = usb_parent_sysname;
 		udev_device_unref(ud);
+		udev_enumerate_unref(enumerate);
 		udev_unref(udev);
 		return res;
 	      }
@@ -103,10 +105,12 @@ std::string getDeviceParentSyspath(const std::string& path) {
 
 	    // fallback (should not happen) ; return the device path
 	    res = name;
+	    udev_enumerate_unref(enumerate);
 	    udev_unref(udev);
 	    return name;
 	  }
 	}
+      udev_enumerate_unref(enumerate);
       udev_unref(udev);
     }
   return "";
