@@ -138,6 +138,7 @@ std::vector<std::string> InputManager::getMice() {
 	  udev_device_unref(dev);
 	}
 
+      udev_enumerate_unref(enumerate);
       udev_unref(udev);
     }
   #endif
