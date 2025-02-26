@@ -164,6 +164,7 @@ bool InputConfig::isWheel(const std::string path) {
 	    	}
 	    	udev_device_unref(dev);
 	      }
+	    udev_enumerate_unref(enumerate);
 	    udev_unref(udev);
 	  }
 	return res;
